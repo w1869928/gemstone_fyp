@@ -12,7 +12,20 @@
           "package_name": "com.example.gemstone_fyp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "875758190855-cas03b6n4anvoosgmbiuj7dd64a80qas.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gemstone_fyp",
+            "certificate_hash": "e59c4e82ae54241dbb61d58eef95e8fdfe352303"
+          }
+        },
+        {
+          "client_id": "875758190855-30qd8t20a6a89ah0g9l4ldem1vv5eaq9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBHk0ySPuUX3E-6KngCMzpwmFdjaS-Q1M8"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875758190855-30qd8t20a6a89ah0g9l4ldem1vv5eaq9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -1,9 +1,12 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gemstone_fyp/HomePage.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import 'auth.dart';
 import 'login_page.dart';
+import 'main.dart';
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
@@ -20,35 +23,26 @@ class _SignupPageState extends State<SignupPage> {
   late String password;
   bool showSpinner=false;
 
-  // void logupUser(context) async{
-  //   if(_formKey.currentState!=null && _formKey.currentState!.validate()){//validate ennsn sheyyandu documentation peithu paru(ctrl+b) ella form field da descendent em check pannua
-  //     setState(() {
-  //       showSpinner=true;
-  //     });
-  //     try{
-  //       final newUser=await _auth.createUserWithEmailAndPassword(email: emailController.text.trim(), password: passwordController.text.trim());
-  //       if(newUser != null){
-  //         Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: "Gemeo")));
-  //         // MaterialPageRoute, which is useful because it transitions to the new route using a platform-specific animation.
-  //       }
-  //       setState(() {
-  //         showSpinner=false;
-  //       });
-  //     } on FirebaseAuthException catch(e){
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //           content: Text("${e.message}")
-  //       )
-  //       );
-  //     }
-  //     setState(() {
-  //       showSpinner=false;
-  //     });
-  //
-  //   }else{
-  //     print('failed to login');
-  //   }
-  //
-  // }
+  Future<void> signUpWithEmailAndPassword(context) async {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()){
+      setState(() {
+        showSpinner = true;
+      });
+      try {
+        await Auth().createUserWithEmailAndPassword(email: emailController.text.trim(), password: passwordController.text.trim());
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("${e.message}")
+        ));
+        print("${e.message}");
+      }
+      setState(() {
+        showSpinner=false;
+      });
+    }
+
+  }
 
   @override
   void dispose() {
@@ -238,7 +232,7 @@ class _SignupPageState extends State<SignupPage> {
                         SizedBox(height: 50,),
                         ElevatedButton(
                             onPressed: () {
-                              //logupUser(context);
+                              signUpWithEmailAndPassword(context);
                             },
                             style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.zero,

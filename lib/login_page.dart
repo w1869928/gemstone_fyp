@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gemstone_fyp/HomePage.dart';
+import 'package:gemstone_fyp/auth.dart';
+import 'package:gemstone_fyp/main.dart';
 import 'package:gemstone_fyp/signup_page.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:email_validator/email_validator.dart';
@@ -18,10 +21,29 @@ class _LoginPageState extends State<LoginPage> {
   final emailController=TextEditingController();
   final passwordController=TextEditingController();
   final _formKey=GlobalKey<FormState>();//Global key to check all form elements
-  // final _authe= FirebaseAuth.instance;
+  final _auth= FirebaseAuth.instance;
   late String email;
   late String password;
   bool showSpinner=false;
+
+  Future<void> signInWithEmailAndPassword(context) async {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()){
+      setState(() {
+        showSpinner = true;
+      });
+      try {
+        await Auth().signInWithEmailAndPassword(email: emailController.text.trim(), password: passwordController.text.trim());
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("${e.message}")
+        ));
+      }
+      setState(() {
+        showSpinner=false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -207,14 +229,15 @@ class _LoginPageState extends State<LoginPage> {
                         focusColor: Color.fromARGB(255, 87, 169, 182),
                         child: Text("forgot password?",
                           style: TextStyle(color: Colors.white),),
-                      )),
+                      )
+                  ),
                   Container(
                     child: Column(
                       children: [
                         SizedBox(height: 20,),
                         ElevatedButton(
                             onPressed: () {
-                              SignupPage();
+                              signInWithEmailAndPassword(context);
                             },
                             style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.zero,
@@ -241,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
                         ElevatedButton(
                             onPressed: () {
                               try{
-                                SignupPage();
+                                Auth().signInWithGoogle(context);
                               }on FirebaseAuthException catch(e){
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                     content: Text("${e.message}")
