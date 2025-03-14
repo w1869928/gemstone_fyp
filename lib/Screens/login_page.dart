@@ -1,13 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gemstone_fyp/HomePage.dart';
-import 'package:gemstone_fyp/auth.dart';
-import 'package:gemstone_fyp/main.dart';
-import 'package:gemstone_fyp/signup_page.dart';
+import 'package:gemstone_fyp/Screens/auth.dart';
+import 'package:gemstone_fyp/Screens/signup_page.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:email_validator/email_validator.dart';
 
+import 'HomePage.dart';
 import 'forgot_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController=TextEditingController();
   final _formKey=GlobalKey<FormState>();//Global key to check all form elements
   final _auth= FirebaseAuth.instance;
+  final fireStore = FirebaseFirestore.instance;
   late String email;
   late String password;
   bool showSpinner=false;
@@ -33,7 +34,12 @@ class _LoginPageState extends State<LoginPage> {
       });
       try {
         await Auth().signInWithEmailAndPassword(email: emailController.text.trim(), password: passwordController.text.trim());
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+          if (user!= null) {
+          _navigateToHome(user);
+          }
+        });
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("${e.message}")
@@ -42,6 +48,28 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         showSpinner=false;
       });
+    }
+  }
+
+  Future<void> _navigateToHome(User user) async {
+    final userDoc = fireStore.collection('Users').doc(user.uid);
+    final userSnapshot = await userDoc.get();
+
+    if (!userSnapshot.exists) {
+      await userDoc.set({
+        'id': user.uid,
+        'email': user.email ?? '',
+        'lastLogin': DateTime.now().toIso8601String(),
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+    } else {
+      await userDoc.update({
+        'lastLogin': DateTime.now().toIso8601String(),
+      });
+    }
+
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 

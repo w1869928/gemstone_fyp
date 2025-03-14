@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gemstone_fyp/HomePage.dart';
+import 'package:gemstone_fyp/Screens/login_page.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'HomePage.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -24,8 +26,9 @@ class Auth {
     await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut(context) async {
     await _firebaseAuth.signOut();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()),);
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {

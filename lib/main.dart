@@ -1,37 +1,49 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:gemstone_fyp/HomePage.dart';
-import 'package:gemstone_fyp/login_page.dart';
-import 'package:gemstone_fyp/signup_page.dart';
+import 'package:gemstone_fyp/Screens/HomePage.dart';
+import 'package:gemstone_fyp/Screens/signup_page.dart';
+import 'package:gemstone_fyp/routes.dart';
+import 'Screens/Layout_Page.dart';
+import 'Screens/login_page.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyApp(),
-    ),
+      MyApp()
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final AppRouter _appRouter = AppRouter(); // Creating AppRouter
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<User?>( //Listens to the Firebase authentication state in real time.
-        stream: FirebaseAuth.instance.authStateChanges(),//real-time stream of the authentication state.
-        builder: (context,snapshot){
-          if(snapshot.hasData){//checks if a user is logged in.
-            return SignupPage();
-          }else{
-            return LoginPage();
-          }
-        },
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: _appRouter.onGenerateRoute, // Use AppRouter for navigation
+      home: AuthWrapper(), // Wrapper to decide home screen
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return const LayoutScreen(pageIndex: 0); // If user is logged in, go to home
+        } else {
+          return const LoginPage(); // If not, go to login page
+        }
+      },
     );
   }
 }

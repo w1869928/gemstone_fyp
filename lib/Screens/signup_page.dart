@@ -1,12 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gemstone_fyp/HomePage.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-
+import 'HomePage.dart';
 import 'auth.dart';
 import 'login_page.dart';
-import 'main.dart';
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
