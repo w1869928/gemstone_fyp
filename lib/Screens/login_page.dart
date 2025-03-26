@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gemstone_fyp/Screens/auth.dart';
 import 'package:gemstone_fyp/Screens/signup_page.dart';
+import 'package:gemstone_fyp/Themes/color_palette.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
         // Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
         FirebaseAuth.instance.authStateChanges().listen((User? user) {
           if (user!= null) {
-          _navigateToHome(user);
+          navigateToHome(user);
           }
         });
       } on FirebaseAuthException catch (e) {
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _navigateToHome(User user) async {
+  Future<void> navigateToHome(User user) async {
     final userDoc = fireStore.collection('Users').doc(user.uid);
     final userSnapshot = await userDoc.get();
 
@@ -86,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Container(
               width: w,
-              height: h*0.2,
+              height: h*0.15,
               decoration: BoxDecoration(
                   color:  Color(0xFFC9EEFF),
                   borderRadius: BorderRadius.only(
@@ -280,14 +281,14 @@ class _LoginPageState extends State<LoginPage> {
                                 height: 43,
                                 alignment: Alignment.center,
                                 child: const Text('Sign in',
-                                  style: const TextStyle(fontSize: 24),
+                                  style: const TextStyle(fontSize: 24, color: Colors.white),
                                 ),
                               ),
                             )
                         ),
                         SizedBox(height: 5,),
-                        Text("-OR-",
-                            style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color:Colors.white)),
+                        Text("OR",
+                            style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500,color:ColorPalette.mainBlue[7])),
                         SizedBox(height: 5,),
                         ElevatedButton(
                             onPressed: () {
@@ -312,8 +313,20 @@ class _LoginPageState extends State<LoginPage> {
                                 width: 250,
                                 height: 43,
                                 alignment: Alignment.center,
-                                child: const Text('sign in with Google',
-                                    style: TextStyle(fontSize: 17,color: Colors.black)
+                                child:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons/google.png', // Replace with the actual path
+                                      width: 24,  // Adjust size as needed
+                                      height: 24,
+                                    ),
+                                    const SizedBox(width: 8), // Space between icon and text
+                                    const Text(
+                                      'Sign in with Google',
+                                      style: TextStyle(fontSize: 17, color: Colors.black),
+                                    ),
+                                  ],
                                 ),
                               ),
                             )

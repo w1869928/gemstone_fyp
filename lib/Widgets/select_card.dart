@@ -26,15 +26,15 @@ class SelectCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         child: Ink(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: ColorPalette.mainBlue[8],
             borderRadius:BorderRadius.circular(8),
-            border:isBordered ? Border.all(color: ColorPalette.mainBlue[300]!)
+            border:isBordered ? Border.all(color: ColorPalette.mainBlue[7]!)
                 : null
           ),
           child: InkWell(
             onTap: onTap,
-            splashColor: ColorPalette.mainBlue[200],
-            highlightColor: ColorPalette.mainBlue[100],
+            splashColor: ColorPalette.mainBlue[7],
+            highlightColor: ColorPalette.mainBlue[7],
             borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -52,7 +52,7 @@ class SelectCard extends StatelessWidget {
                           border: Border.all(
                             width: 1,
                             color: isBordered
-                                ? ColorPalette.mainBlue[300]!
+                                ? ColorPalette.mainBlue[7]!
                                 : const Color(0xFFE9E9E9),
                           ),
                         ),
@@ -60,7 +60,7 @@ class SelectCard extends StatelessWidget {
                           child: ImageIconBuilder(
                             image: icon,
                             isSelected: true,
-                            selectedColor: ColorPalette.mainBlue[400]!,
+                            selectedColor: ColorPalette.mainBlue[7]!,
                           ),
                         ),
                       ),
@@ -70,9 +70,10 @@ class SelectCard extends StatelessWidget {
                       ),
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
+                        color: ColorPalette.mainBlue[7]
                       ),
                     ),
                   ],
@@ -80,7 +81,7 @@ class SelectCard extends StatelessWidget {
                 ImageIconBuilder(
                   image: 'assets/icons/arrow_right_filled.png',
                   isSelected: true,
-                  selectedColor: ColorPalette.mainBlue[400]!,
+                  selectedColor: ColorPalette.mainBlue[7]!,
                 ),
               ],
               ),

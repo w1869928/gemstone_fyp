@@ -1,22 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'HomePage.dart';
 import 'auth.dart';
 import 'login_page.dart';
 class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+  const SignupPage({super.key});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final usernameController = TextEditingController();
   final emailController=TextEditingController();
   final passwordController=TextEditingController();
   final _formKey=GlobalKey<FormState>();//it checks all the form elements
-  //final _auth=FirebaseAuth.instance;
   late String email;
   late String password;
   bool showSpinner=false;
@@ -28,12 +28,15 @@ class _SignupPageState extends State<SignupPage> {
       });
       try {
         await Auth().createUserWithEmailAndPassword(email: emailController.text.trim(), password: passwordController.text.trim());
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+          if (user!= null) {
+            _navigateToHome(user);
+          }
+        });
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("${e.message}")
         ));
-        print("${e.message}");
       }
       setState(() {
         showSpinner=false;
@@ -42,11 +45,34 @@ class _SignupPageState extends State<SignupPage> {
 
   }
 
+  Future<void> _navigateToHome(User user) async {
+    final userDoc = FirebaseFirestore.instance.collection('Users').doc(user.uid);
+    final userSnapshot = await userDoc.get();
+
+    if (!userSnapshot.exists) {
+      await userDoc.set({
+        'name': usernameController.text.trim(),
+        'id': user.uid,
+        'email': user.email ?? '',
+        'lastLogin': DateTime.now().toIso8601String(),
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+    } else {
+      await userDoc.update({
+        'lastLogin': DateTime.now().toIso8601String(),
+      });
+    }
+
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
+
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-
+    usernameController.dispose();
     super.dispose();
   }
 
@@ -63,7 +89,7 @@ class _SignupPageState extends State<SignupPage> {
           children: [
             Container(
               width: w,
-              height: h*0.2,
+              height: h*0.1,
               decoration: BoxDecoration(
                   color:  Color(0xFFC9EEFF),
                   borderRadius: BorderRadius.only(
@@ -116,6 +142,67 @@ class _SignupPageState extends State<SignupPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            "Username",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                          SizedBox(height: 3),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 185, 243, 252),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 10,
+                                  spreadRadius: 5,
+                                  offset: Offset(1, 1),
+                                  color: Color.fromARGB(255, 185, 243, 252).withOpacity(0.5),
+                                )
+                              ],
+                            ),
+                            child: TextFormField(
+                              validator: (value) {
+                                if (value != null && value.isEmpty) {
+                                  return "Enter a valid username";
+                                } else if (value != null && value.length < 3) {
+                                  return "Username should be at least 5 characters";
+                                }
+                              },
+                              controller: usernameController, // Create a controller for username
+                              cursorColor: Colors.white,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: Color.fromARGB(252, 2, 1, 91),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(252, 2, 1, 91),
+                                    width: 2,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(252, 2, 1, 91),
+                                    width: 1,
+                                  ),
+                                ),
+                                labelText: "Enter Your Username",
+                                labelStyle: TextStyle(
+                                  color: Color.fromARGB(252, 2, 1, 91),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                filled: true,
+                                fillColor: Color.fromARGB(255, 185, 243, 252),
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 20),
                           Text("Email",
                             style: TextStyle(
                                 fontSize: 18,
@@ -245,7 +332,7 @@ class _SignupPageState extends State<SignupPage> {
                                 height: 43,
                                 alignment: Alignment.center,
                                 child: const Text('Sign up',
-                                  style: const TextStyle(fontSize: 24),
+                                  style: const TextStyle(fontSize: 24, color: Colors.white),
                                 ),
                               ),
                             )

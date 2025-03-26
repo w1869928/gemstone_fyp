@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gemstone_fyp/Screens/Favourites_Page.dart';
 import 'package:gemstone_fyp/Screens/HomePage.dart';
 import 'package:gemstone_fyp/Screens/ViewUser_Page.dart';
+import 'package:gemstone_fyp/Screens/classify_page.dart';
 import 'package:gemstone_fyp/Screens/forgot_page.dart';
 import 'package:gemstone_fyp/Screens/more_page.dart';
 
@@ -51,6 +52,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
         physics: const NeverScrollableScrollPhysics(), // Disable swipe gesture
         children: const [
           MyHomePage(),
+          ClassifyPage(),
           FavouritesPage(),
           MorePage(),
         ],
@@ -75,6 +77,17 @@ class _LayoutScreenState extends State<LayoutScreen> {
             BottomNavigationBarItem(
               icon: _selectedIndex == 1
                   ? const ImageIconBuilder(
+                image: 'assets/icons/camera.png',
+                isSelected: true,
+              )
+                  : const ImageIconBuilder(
+                image: 'assets/icons/camera-outline.png',
+              ),
+              label: 'Classify',
+            ),
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 2
+                  ? const ImageIconBuilder(
                 image: 'assets/icons/favourite.png',
                 isSelected: true,
               )
@@ -84,7 +97,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
               label: 'Favorites',
             ),
             BottomNavigationBarItem(
-              icon: _selectedIndex == 2
+              icon: _selectedIndex == 3
                   ? const ImageIconBuilder(
                 image: 'assets/icons/more-outline.png',
                 isSelected: true,

@@ -44,7 +44,9 @@ class ColorPalette {
     400: Color(0xFFB0B0B0), // Level 4
     500: Color(0xFF888888), // Level 5
     600: Color(0xFF252525), // Level 6
-    7: Color.fromARGB(129, 255, 255, 255)
+    6: Color.fromARGB(226, 255, 255, 255),
+    7: Color.fromARGB(129, 255, 255, 255),
+    8: Color.fromARGB(84, 255, 255, 255)
   };
 
   static const Map<int, Color> positiveColor = {

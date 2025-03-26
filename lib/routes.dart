@@ -12,17 +12,24 @@ class AppRouter {
           ),
         );
 
-      case '/favorite':
+      case '/classify':
         return _createRoute(
           const LayoutScreen(
             pageIndex: 1,
           ),
         );
 
-      case '/more':
+      case '/favorite':
         return _createRoute(
           const LayoutScreen(
             pageIndex: 2,
+          ),
+        );
+
+      case '/more':
+        return _createRoute(
+          const LayoutScreen(
+            pageIndex: 3,
           ),
         );
 

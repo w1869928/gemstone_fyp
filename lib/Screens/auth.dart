@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gemstone_fyp/Screens/login_page.dart';
@@ -45,11 +46,29 @@ class Auth {
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
       );
-
+      final fireStore = FirebaseFirestore.instance;
       final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
 
       if (userCredential.user != null) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage()),);
+        FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+          final userDoc = fireStore.collection('Users').doc(user?.uid);
+          final userSnapshot = await userDoc.get();
+
+          if (!userSnapshot.exists) {
+            await userDoc.set({
+              'id': user?.uid,
+              'name': gUser.displayName ?? 'Unknown',
+              'email': user?.email ?? '',
+              'lastLogin': DateTime.now().toIso8601String(),
+              'createdAt': DateTime.now().toIso8601String(),
+            });
+          } else {
+            await userDoc.update({
+              'lastLogin': DateTime.now().toIso8601String(),
+            });
+          }
+        });
+        Navigator.pushReplacementNamed(context, '/home');
       }
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -61,7 +80,4 @@ class Auth {
       );
     }
   }
-
-
-
 }

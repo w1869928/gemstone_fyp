@@ -23,17 +23,34 @@ dependencies:
   flutter_svg: ^2.0.17
   fluttertoast: ^8.2.12
   intl: ^0.20.2
+  animated_custom_dropdown: 3.1.1
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/gem-log.png"
+  adaptive_icon_foreground: "assets/images/gem-logo.png"
+  adaptive_icon_background: "#0000ff"
+
+flutter_launcher_name:
+  name: "Guru"
 
 flutter:
   assets:
     - assets/icons/
     - assets/images/
   uses-material-design: true
+  fonts:
+    - family: Pacifico
+      fonts:
+        - asset: fonts/Pacifico-Regular.ttf
 
 
