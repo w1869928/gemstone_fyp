@@ -12,13 +12,13 @@ class FavouritesPage extends StatefulWidget {
   const FavouritesPage({super.key});
 
   @override
-  State<FavouritesPage> createState() => _FavouritesPageState();
+  State<FavouritesPage> createState() => FavouritesPageState();
 }
 
 
-class _FavouritesPageState extends State<FavouritesPage> {
-  final fireStoreInstance = FirebaseFirestore.instance;
-  final auth = FirebaseAuth.instance;
+class FavouritesPageState extends State<FavouritesPage> {
+   FirebaseFirestore fireStoreInstance = FirebaseFirestore.instance;
+   FirebaseAuth auth = FirebaseAuth.instance;
   List<GemstoneEntity> gemstones = [];
   bool showSpinner = false;
 
@@ -75,7 +75,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
         .get();
 
     final List<DocumentSnapshot> documents = result.docs;
-    
+
     documents.forEach((document){
       //Map<String, dynamic> data = document.data() as Map<String, dynamic>;
       gemstones.add(

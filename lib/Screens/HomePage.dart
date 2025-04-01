@@ -20,12 +20,14 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final fireStoreInstance = FirebaseFirestore.instance;
+class MyHomePageState extends State<MyHomePage> {
+  late FirebaseFirestore fireStoreInstance = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+  late final http.Client client;
+  MyHomePageState({http.Client? client}) : client = client ?? http.Client();
 
   final TextEditingController item2Controller = TextEditingController();
   final List<String> gemstoneTypes  = ['Sapphire', 'Ruby', 'Tomalin', 'Chrysoberyl', 'Alexandrite', 'Spinel'];
@@ -43,6 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String? predictedPrice;
   Map<String, dynamic>? data;
   bool showSpinner = false;
+
+  set gemstones(List<dynamic>gemstones) {}
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final url = Uri.parse("https://gemstone-model.onrender.com/predict"); // Use your server IP
     String key = "production";
     try {
-      final response = await http.post(
+      final response = await client.post(
         url,
         headers: {
           "Content-Type": "application/json",

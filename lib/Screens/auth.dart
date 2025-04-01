@@ -7,7 +7,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'HomePage.dart';
 
 class Auth {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth;
+
+  Auth({FirebaseAuth? firebaseAuth})
+      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
 
   User? get currentUser => _firebaseAuth.currentUser;
 

@@ -25,8 +25,11 @@ dependencies:
   intl: ^0.20.2
   animated_custom_dropdown: 3.1.1
   image_picker: ^1.1.2
+  firebase_core_platform_interface: ^5.4.0
+  rxdart: ^0.28.0
 
 dev_dependencies:
+  mockito: ^5.4.5
   flutter_test:
     sdk: flutter
 
